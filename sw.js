@@ -1,5 +1,5 @@
 // Ganti angka versi ini setiap kali kamu mengubah index.html, supaya HP memuat versi terbaru.
-const CACHE = 'racerun-v1';
+const CACHE = 'racerun-v2';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', (e) => {
