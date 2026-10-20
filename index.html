@@ -11,7 +11,7 @@
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>Racerun Card Maker</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Inter:wght@500;700;800;900&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&amp;family=Inter:wght@500;600;700;800;900&amp;display=swap">
 <style>
 /* Layout: a grey Figma-like stage holding the card on the left, a plain form on the right. */
 :root{
@@ -60,6 +60,10 @@ input[type=range]{width:100%;height:42px;margin:0;accent-color:var(--ink)}
 .swatches{display:flex;gap:10px;flex-wrap:wrap}
 .sw{width:36px;height:36px;border-radius:50%;border:2px solid var(--line);padding:0;cursor:pointer}
 .sw[aria-pressed="true"]{border-color:var(--ink);box-shadow:0 0 0 2px var(--panel) inset}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font:inherit;font-weight:600;font-size:14px;height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--btn-bg);color:var(--btn-fg);border-color:var(--btn-bg)}
+.note{margin:0;font-size:13px;color:var(--muted)}
 .actions{display:flex;gap:10px;flex-wrap:wrap}
 button.b{font:inherit;font-weight:600;height:44px;padding:0 20px;border-radius:4px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--ink)}
 button.b.main{background:var(--btn-bg);color:var(--btn-fg);border-color:var(--btn-bg);flex:1;min-width:160px}
@@ -71,7 +75,7 @@ button.b.main{background:var(--btn-bg);color:var(--btn-fg);border-color:var(--bt
 <div class="wrap">
   <header>
     <h1>Racerun Card Maker</h1>
-    <p class="lede">Type your run, pick an accent and save the card as a PNG. Pace is worked out from distance and move time, and you can still overwrite it.</p>
+    <p class="lede">Pick a template, type your run and save the card as a PNG. Pace is worked out from distance and move time, and you can still overwrite it.</p>
   </header>
 
   <div class="grid">
@@ -85,17 +89,39 @@ button.b.main{background:var(--btn-bg);color:var(--btn-fg);border-color:var(--bt
     </div>
 
     <div class="panel">
+      <div class="f">
+        <span class="lab" id="tp-lab">Template</span>
+        <div class="chips" role="group" aria-labelledby="tp-lab">
+          <button type="button" class="chip" data-t="poster" aria-pressed="true">Poster</button>
+          <button type="button" class="chip" data-t="route" aria-pressed="false">Route</button>
+          <button type="button" class="chip" data-t="big" aria-pressed="false">Big number</button>
+          <button type="button" class="chip" data-t="stack" aria-pressed="false">Stack</button>
+          <button type="button" class="chip" data-t="ticket" aria-pressed="false">Ticket</button>
+          <button type="button" class="chip" data-t="glow" aria-pressed="false">Glow</button>
+        </div>
+      </div>
+
+      <div class="f">
+        <span class="lab" id="pr-lab">Color preset</span>
+        <div class="chips" role="group" aria-labelledby="pr-lab">
+          <button type="button" class="chip" data-p="light" aria-pressed="true">Light</button>
+          <button type="button" class="chip" data-p="dark" aria-pressed="false">Dark</button>
+          <button type="button" class="chip" data-p="sunset" aria-pressed="false">Sunset</button>
+        </div>
+      </div>
+
       <div class="row">
         <div class="f"><label for="brand">Brand</label><input id="brand" type="text" value="Racerun" autocomplete="off"></div>
         <div class="f"><label for="date">Date</label><input id="date" type="date" value="2026-10-19"></div>
-        <div class="f full"><label for="title">Headline</label><input id="title" type="text" value="Run." autocomplete="off"></div>
+        <div class="f"><label for="title">Headline</label><input id="title" type="text" value="Run." autocomplete="off"></div>
+        <div class="f"><label for="sub">Subtitle</label><input id="sub" type="text" value="Morning run" autocomplete="off"></div>
         <div class="f"><label for="dist">Distance (km)</label><input id="dist" type="text" inputmode="decimal" value="5" autocomplete="off"></div>
         <div class="f"><label for="move">Move time</label><input id="move" type="text" value="31:00" placeholder="mm:ss or h:mm:ss" autocomplete="off"></div>
         <div class="f full"><label for="pace">Pace (min per km)</label><input id="pace" type="text" value="6.30" autocomplete="off"></div>
       </div>
 
       <div class="f">
-        <span class="lab" id="acc-lab">Swoosh accent</span>
+        <span class="lab" id="acc-lab">Accent</span>
         <div class="swatches" role="group" aria-labelledby="acc-lab">
           <button type="button" class="sw" data-c="#B23A3A" style="background:#B23A3A" aria-label="Brick red" aria-pressed="true"></button>
           <button type="button" class="sw" data-c="#D9622B" style="background:#D9622B" aria-label="Orange" aria-pressed="false"></button>
@@ -106,17 +132,12 @@ button.b.main{background:var(--btn-bg);color:var(--btn-fg);border-color:var(--bt
 
       <div class="row">
         <div class="f"><label for="bg">Background</label>
-          <select id="bg"><option value="white">White</option><option value="clear">Transparent</option></select>
+          <select id="bg"><option value="white">White</option><option value="color">Color</option><option value="clear">Transparent</option></select>
         </div>
-        <div class="f"><label for="txt">Text color</label>
-          <input id="txt" type="color" value="#0b0b0b">
-        </div>
-        <div class="f"><label for="shade">Shade color</label>
-          <input id="shade" type="color" value="#0a0a0a">
-        </div>
-        <div class="f"><label for="shadeAmt">Shade strength</label>
-          <input id="shadeAmt" type="range" min="0" max="100" step="1" value="100">
-        </div>
+        <div class="f"><label for="bgc">Background color</label><input id="bgc" type="color" value="#ffffff"></div>
+        <div class="f"><label for="txt">Text color</label><input id="txt" type="color" value="#0b0b0b"></div>
+        <div class="f"><label for="shade">Shade color</label><input id="shade" type="color" value="#0a0a0a"></div>
+        <div class="f full"><label for="shadeAmt">Shade strength</label><input id="shadeAmt" type="range" min="0" max="100" step="1" value="100"></div>
       </div>
 
       <div class="row">
@@ -135,6 +156,7 @@ button.b.main{background:var(--btn-bg);color:var(--btn-fg);border-color:var(--bt
       </div>
 
       <div class="row">
+        <div class="f full"><p class="note">Shape settings apply to Poster, Route, Big number and Glow. Stack and Ticket are typography only.</p></div>
         <div class="f"><label for="shape">Shape</label>
           <select id="shape">
             <option value="wave">Wave (reference)</option>
@@ -171,16 +193,22 @@ button.b.main{background:var(--btn-bg);color:var(--btn-fg);border-color:var(--bt
 (function(){
   var cv=document.getElementById('cv'), ctx=cv.getContext('2d');
   var $=function(id){return document.getElementById(id)};
-  var state={accent:'#B23A3A',w:1080,h:1920,seed:1};
+  var state={accent:'#B23A3A',w:1080,h:1920,seed:1,tpl:'poster'};
   var FONT='Inter,"Helvetica Neue",Arial,sans-serif';
+  var MONO='ui-monospace,SFMono-Regular,Menlo,Consolas,monospace';
   var DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   var MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var ink='#0B0B0B';
 
   function fmtDate(v){
     if(!v) return '';
     var p=v.split('-').map(Number), dt=new Date(Date.UTC(p[0],p[1]-1,p[2]));
     var d=p[2]<10?'0'+p[2]:''+p[2];
     return DAYS[dt.getUTCDay()]+', '+d+' '+MONTHS[p[1]-1]+' '+p[0];
+  }
+  function shortDate(v){
+    if(!v) return '';
+    var p=v.split('-'); return p[2]+'/'+p[1]+'/'+p[0];
   }
   function num(s){return parseFloat(String(s).replace(',','.'))}
   function fmtDist(){
@@ -199,6 +227,7 @@ button.b.main{background:var(--btn-bg);color:var(--btn-fg);border-color:var(--bt
     $('pace').value=m+'.'+(r<10?'0':'')+r;
   }
   function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+  function spacing(v){ try{ ctx.letterSpacing=v; }catch(e){} }
 
   var SHAPES={
     wave:[[-0.08,1.05],[0.155,0.943],[0.42,0.885],[0.7125,0.827],[0.884,0.748],[1.08,0.62]],
@@ -222,7 +251,7 @@ button.b.main{background:var(--btn-bg);color:var(--btn-fg);border-color:var(--bt
       var a=q[Math.max(0,i-1)], b=q[i], c=q[i+1], d=q[Math.min(n-1,i+2)];
       p.bezierCurveTo(b[0]+(c[0]-a[0])/6,b[1]+(c[1]-a[1])/6,c[0]-(d[0]-b[0])/6,c[1]-(d[1]-b[1])/6,c[0],c[1]);
     }
-    return p;
+    return {p:p,a:q[0],b:q[n-1]};
   }
   function band(p,color,w,blur,alpha,dy){
     var L=30;
@@ -232,63 +261,270 @@ button.b.main{background:var(--btn-bg);color:var(--btn-fg);border-color:var(--bt
     for(var i=0;i<L;i++){ ctx.lineWidth=Math.max(1,w+blur*(1-2*i/(L-1))); ctx.stroke(p); }
     ctx.restore();
   }
-  function spacing(v){ try{ ctx.letterSpacing=v; }catch(e){} }
+
+  function T(str,x,y,size,weight,align,color,ls,alpha,fam){
+    ctx.font=weight+' '+Math.max(1,Math.round(size))+'px '+(fam||FONT);
+    ctx.textAlign=align||'left'; ctx.fillStyle=color||ink; spacing(ls||'0px');
+    ctx.globalAlpha=(alpha==null)?1:alpha;
+    ctx.fillText(str,x,y);
+    ctx.globalAlpha=1;
+  }
+  function fit(str,weight,maxW,maxSize,fam){
+    ctx.font=weight+' 100px '+(fam||FONT); spacing('0px');
+    var w=ctx.measureText(str).width||1;
+    return Math.min(maxSize,100*maxW/w);
+  }
+  function trail(p,w,col,glow){
+    ctx.save(); ctx.lineCap='round'; ctx.lineJoin='round';
+    if(glow){ ctx.shadowColor=col; ctx.shadowBlur=glow; }
+    ctx.strokeStyle=col; ctx.lineWidth=w; ctx.stroke(p); ctx.restore();
+  }
+  function dot(x,y,r,fill){ ctx.save(); ctx.fillStyle=fill; ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill(); ctx.restore(); }
+
+  function routePath(c,bx,by,bw,bh){
+    var pts=SHAPES[$('shape').value]||SHAPES.wave;
+    var minx=1e9,maxx=-1e9,miny=1e9,maxy=-1e9;
+    pts.forEach(function(p){minx=Math.min(minx,p[0]);maxx=Math.max(maxx,p[0]);miny=Math.min(miny,p[1]);maxy=Math.max(maxy,p[1]);});
+    var U=Math.min(bw/(maxx-minx),bh/(maxy-miny));
+    var ox=bx+(bw-(maxx-minx)*U)/2, oy=by+(bh-(maxy-miny)*U)/2;
+    var np=pts.map(function(p){return [((p[0]-minx)*U+ox)/c.W,((p[1]-miny)*U+oy)/c.H];});
+    return swoosh(np,c.W,c.H,$('wob').value/100*0.05);
+  }
+
+  function header(c){
+    var base=c.safe?Math.round(c.H*0.13+41*c.s):Math.round(164*c.s);
+    var brand=$('brand').value||'Racerun';
+    T(brand,c.mx,base,56*c.s,800,'left',ink,'-1px');
+    var bw=ctx.measureText(brand).width;
+    var dt=fmtDate($('date').value);
+    T(dt,c.W-c.mx,base,31*c.s,500,'right',ink,'0px');
+    var dw=ctx.measureText(dt).width;
+    var x1=c.mx+bw+26*c.s, x2=c.W-c.mx-dw-26*c.s;
+    if(x2>x1){ ctx.fillStyle=ink; ctx.fillRect(x1,base-12*c.s,x2-x1,Math.max(2,Math.round(3*c.s))); }
+    return base;
+  }
+
+  function bands(c,mul){
+    var pts=SHAPES[$('shape').value]||SHAPES.wave;
+    var thick=$('thick').value/100, soft=$('soft').value/100, off=$('off').value/100;
+    var wob=$('wob').value/100*0.09, lines=parseInt($('lines').value,10), yS=-$('ypos').value/100*c.H;
+    var amt=$('shadeAmt').value/100, gap=c.H*0.065;
+    var pth=swoosh(pts,c.W,c.H,wob).p;
+    for(var li=lines-1;li>=0;li--){
+      var k=1-0.28*li, fade=li===0?1:0.85, dy=yS-li*gap;
+      band(pth,state.accent,c.W*0.15*thick*k,c.W*0.11*soft*k,0.12*fade*mul,dy+c.H*0.04*off);
+      band(pth,$('shade').value,c.W*0.12*thick*k,c.W*0.085*soft*k,0.14*amt*fade*mul,dy);
+    }
+  }
+
+  function poster(c){
+    var s=c.s;
+    bands(c,1);
+    header(c);
+    var runY=Math.round(c.H*(c.safe?0.70:0.728));
+    T($('title').value||'Run.',c.mx,runY,205*s,900,'left',ink,Math.round(-9*s)+'px');
+    T('Distance/'+fmtDist()+' KM',c.mx,runY+68*s,48*s,800,'left',ink,'-0.5px');
+    T('Move/'+($('move').value||'00:00'),c.mx,runY+126*s,48*s,800,'left',ink,'-0.5px');
+    T('Pace/'+($('pace').value||'0.00'),c.mx,runY+184*s,48*s,800,'left',ink,'-0.5px');
+  }
+
+  function route(c){
+    var s=c.s, W=c.W, H=c.H, mx=c.mx;
+    var top=header(c);
+    var statsY=H-c.bot-30*s, labY=statsY-84*s, titleY=labY-110*s;
+    var by=top+90*s, bh=Math.max(120*s,titleY-170*s-by);
+    var r=routePath(c,mx+40*s,by,W-2*mx-80*s,bh);
+    trail(r.p,Math.max(6,22*s),state.accent,0);
+    trail(r.p,Math.max(2,6*s),ink,0);
+    dot(r.a[0],r.a[1],16*s,ink);
+    dot(r.b[0],r.b[1],20*s,state.accent);
+    dot(r.b[0],r.b[1],8*s,ink);
+    T($('title').value||'Run.',mx,titleY,120*s,900,'left',ink,Math.round(-4*s)+'px');
+    T($('sub').value,W-mx,titleY,32*s,500,'right',ink,'0px',0.7);
+    var colW=(W-2*mx)/3;
+    var vals=[[fmtDist(),'DISTANCE KM'],[$('pace').value||'0.00','PACE /KM'],[$('move').value||'00:00','MOVE TIME']];
+    vals.forEach(function(v,i){
+      var x=mx+i*colW;
+      T(v[1],x,labY,24*s,700,'left',ink,'2px',0.6);
+      var z=fit(v[0],800,colW*0.9,72*s);
+      T(v[0],x,statsY,z,800,'left',ink,'-1px');
+    });
+  }
+
+  function big(c){
+    var s=c.s, W=c.W, H=c.H, mx=c.mx;
+    bands(c,0.9);
+    var top=header(c);
+    T($('sub').value,mx,top+100*s,34*s,500,'left',ink,'0px',0.75);
+    var dist=fmtDist();
+    var size=fit(dist,900,W-2*mx-170*s,620*s);
+    var baseY=Math.round(H*(c.safe?0.60:0.64));
+    T(dist,mx,baseY,size,900,'left',ink,Math.round(-size*0.03)+'px');
+    var w=ctx.measureText(dist).width;
+    T('KM',mx+w+24*s,baseY,100*s,800,'left',ink,'0px');
+    var y1=baseY+110*s, y2=y1+82*s, half=(W-2*mx)/2;
+    T('PACE /KM',mx,y1,26*s,700,'left',ink,'3px',0.6);
+    T($('pace').value||'0.00',mx,y2,76*s,800,'left',ink,'-1px');
+    T('MOVE TIME',mx+half,y1,26*s,700,'left',ink,'3px',0.6);
+    T($('move').value||'00:00',mx+half,y2,76*s,800,'left',ink,'-1px');
+  }
+
+  function stack(c){
+    var s=c.s, W=c.W, H=c.H, mx=c.mx;
+    var top=header(c);
+    T($('sub').value,mx,top+84*s,34*s,500,'left',ink,'0px',0.75);
+    var y0=top+130*s, y1=H-c.bot, rowH=Math.max(120*s,(y1-y0)/3);
+    var rows=[['DISTANCE',fmtDist(),'KM'],['MOVE TIME',$('move').value||'00:00',''],['PACE',$('pace').value||'0.00','/KM']];
+    rows.forEach(function(r,i){
+      var y=y0+i*rowH;
+      ctx.fillStyle=ink; ctx.fillRect(mx,y,W-2*mx,Math.max(2,Math.round(3*s)));
+      T(r[0],mx,y+52*s,26*s,700,'left',ink,'3px',0.6);
+      var vs=fit(r[1],900,W-2*mx-(r[2]?170*s:0),Math.min(230*s,rowH*0.56));
+      var by=y+rowH-44*s;
+      T(r[1],mx,by,vs,900,'left',ink,Math.round(-vs*0.03)+'px');
+      if(r[2]){
+        var w=ctx.measureText(r[1]).width;
+        T(r[2],mx+w+20*s,by,Math.min(64*s,vs*0.4),800,'left',ink,'0px');
+      }
+    });
+    ctx.fillStyle=ink; ctx.fillRect(mx,y0+3*rowH,W-2*mx,Math.max(2,Math.round(3*s)));
+  }
+
+  function ticket(c){
+    var s=c.s, W=c.W, H=c.H, mx=c.mx;
+    var top=header(c);
+    var tx=mx, tw=W-2*mx, ty=top+70*s, th=Math.max(500*s,H-c.bot-ty);
+    var py=ty+th*0.36, nr=34*s, r=36*s;
+    ctx.save();
+    ctx.strokeStyle=ink; ctx.lineWidth=Math.max(2,Math.round(5*s)); ctx.lineJoin='round';
+    ctx.beginPath();
+    ctx.moveTo(tx+r,ty);
+    ctx.lineTo(tx+tw-r,ty); ctx.arcTo(tx+tw,ty,tx+tw,ty+r,r);
+    ctx.lineTo(tx+tw,py-nr); ctx.arc(tx+tw,py,nr,-Math.PI/2,Math.PI/2,true);
+    ctx.lineTo(tx+tw,ty+th-r); ctx.arcTo(tx+tw,ty+th,tx+tw-r,ty+th,r);
+    ctx.lineTo(tx+r,ty+th); ctx.arcTo(tx,ty+th,tx,ty+th-r,r);
+    ctx.lineTo(tx,py+nr); ctx.arc(tx,py,nr,Math.PI/2,-Math.PI/2,true);
+    ctx.lineTo(tx,ty+r); ctx.arcTo(tx,ty,tx+r,ty,r);
+    ctx.closePath(); ctx.stroke();
+    ctx.setLineDash([14*s,12*s]); ctx.lineWidth=Math.max(2,Math.round(3*s));
+    ctx.beginPath(); ctx.moveTo(tx+nr+10*s,py); ctx.lineTo(tx+tw-nr-10*s,py); ctx.stroke();
+    ctx.restore();
+
+    var pad=60*s, lx=tx+pad, rx=tx+tw-pad, topH=py-ty;
+    T(((($('brand').value)||'Racerun')+' · ACTIVITY').toUpperCase(),lx,ty+80*s,28*s,700,'left',ink,'3px',0.65,MONO);
+    var ts=Math.min(200*s,topH*0.5);
+    T($('title').value||'Run.',lx,ty+topH*0.66,ts,900,'left',ink,Math.round(-ts*0.04)+'px');
+    T($('sub').value,lx,ty+topH*0.66+56*s,32*s,600,'left',ink,'0px',0.75,MONO);
+
+    var barH=110*s, barY=ty+th-60*s-barH;
+    var availTop=py+70*s, availBot=barY-50*s;
+    var gap=Math.min(96*s,Math.max(54*s,(availBot-availTop)/4));
+    var rows=[['DISTANCE',fmtDist()+' KM'],['MOVE TIME',$('move').value||'00:00'],['PACE',($('pace').value||'0.00')+' /KM'],['DATE',shortDate($('date').value)]];
+    rows.forEach(function(row,i){
+      var y=availTop+gap*(i+0.8);
+      T(row[0],lx,y,34*s,700,'left',ink,'1px',0.7,MONO);
+      var lw=ctx.measureText(row[0]).width;
+      T(row[1],rx,y,46*s,800,'right',ink,'0px',1,MONO);
+      var vw=ctx.measureText(row[1]).width;
+      ctx.save(); ctx.strokeStyle=ink; ctx.globalAlpha=0.5; ctx.lineWidth=Math.max(2,Math.round(3*s));
+      ctx.setLineDash([2*s,9*s]); ctx.lineCap='round';
+      var a=lx+lw+22*s, b=rx-vw-22*s;
+      if(b>a){ ctx.beginPath(); ctx.moveTo(a,y-10*s); ctx.lineTo(b,y-10*s); ctx.stroke(); }
+      ctx.restore();
+    });
+    var rr=rng(state.seed+7), x=lx;
+    ctx.fillStyle=ink;
+    while(x<rx){
+      var bw=(2+Math.floor(rr()*4))*Math.max(1,s*2);
+      if(x+bw>rx) bw=rx-x;
+      if(rr()>0.35) ctx.fillRect(x,barY,bw,barH);
+      x+=bw+(1+Math.floor(rr()*3))*Math.max(1,s*2);
+    }
+  }
+
+  function glow(c){
+    var s=c.s, W=c.W, H=c.H, mx=c.mx;
+    var top=header(c);
+    var numY=H-c.bot-250*s, numSize=fit(fmtDist(),900,W-2*mx-180*s,230*s);
+    var by=top+70*s, bh=Math.max(140*s,numY-numSize-80*s-by);
+    var r=routePath(c,mx+30*s,by,W-2*mx-60*s,bh);
+    trail(r.p,Math.max(8,34*s),state.accent,Math.max(10,80*s));
+    trail(r.p,Math.max(8,34*s),state.accent,Math.max(10,40*s));
+    trail(r.p,Math.max(3,9*s),ink,0);
+    dot(r.b[0],r.b[1],22*s,ink);
+    var dist=fmtDist();
+    T(dist,W/2,numY,numSize,900,'center',ink,Math.round(-numSize*0.03)+'px');
+    T('KILOMETERS',W/2,numY+70*s,28*s,700,'center',ink,'8px',0.6);
+    var line=($('pace').value||'0.00')+' /KM    ·    '+($('move').value||'00:00');
+    T(line,W/2,numY+160*s,56*s,700,'center',ink,'0px');
+    T($('sub').value,W/2,numY+224*s,30*s,500,'center',ink,'0px',0.7);
+  }
+
+  var TEMPLATES={poster:poster,route:route,big:big,stack:stack,ticket:ticket,glow:glow};
 
   function draw(){
     var W=state.w, H=state.h, s=Math.min(W/1080,H/1500), safe=$('safe').checked;
     if(cv.width!==W) cv.width=W;
     if(cv.height!==H) cv.height=H;
     ctx.setTransform(1,0,0,1,0,0);
-    ctx.globalAlpha=1;
-    var clear=$('bg').value==='clear';
+    ctx.globalAlpha=1; ctx.shadowBlur=0; ctx.setLineDash([]);
+    var mode=$('bg').value;
     ctx.clearRect(0,0,W,H);
-    if(!clear){ ctx.fillStyle='#FFFFFF'; ctx.fillRect(0,0,W,H); }
-    cv.style.background=clear?'transparent':'#FFFFFF';
-    var ink=$('txt').value, mx=Math.round(W*0.095);
-
-    var pts=SHAPES[$('shape').value]||SHAPES.wave;
-    var thick=$('thick').value/100, soft=$('soft').value/100, off=$('off').value/100;
-    var wob=$('wob').value/100*0.09, lines=parseInt($('lines').value,10), yS=-$('ypos').value/100*H;
-    var amt=$('shadeAmt').value/100, gap=H*0.065;
-    var pth=swoosh(pts,W,H,wob);
-    for(var li=lines-1;li>=0;li--){
-      var k=1-0.28*li, fade=li===0?1:0.85, dy=yS-li*gap;
-      band(pth,state.accent,W*0.15*thick*k,W*0.11*soft*k,0.12*fade,dy+H*0.04*off);
-      band(pth,$('shade').value,W*0.12*thick*k,W*0.085*soft*k,0.14*amt*fade,dy);
-    }
-
-    ctx.fillStyle=ink; ctx.textBaseline='alphabetic';
-    var base=safe?Math.round(H*0.13+41*s):Math.round(164*s);
-    ctx.textAlign='left'; ctx.font='800 '+Math.round(56*s)+'px '+FONT; spacing('-1px');
-    var brand=$('brand').value||'Racerun';
-    ctx.fillText(brand,mx,base);
-    var bw=ctx.measureText(brand).width;
-
-    spacing('0px'); ctx.font='500 '+Math.round(31*s)+'px '+FONT; ctx.textAlign='right';
-    var dt=fmtDate($('date').value);
-    ctx.fillText(dt,W-mx,base);
-    var dw=ctx.measureText(dt).width;
-    var x1=mx+bw+26*s, x2=W-mx-dw-26*s;
-    if(x2>x1) ctx.fillRect(x1,base-12*s,x2-x1,Math.max(2,Math.round(3*s)));
-
-    var runY=Math.round(H*(safe?0.70:0.728));
-    ctx.textAlign='left'; ctx.font='900 '+Math.round(205*s)+'px '+FONT; spacing(Math.round(-9*s)+'px');
-    ctx.fillText($('title').value||'Run.',mx,runY);
-
-    spacing('-0.5px'); ctx.font='800 '+Math.round(48*s)+'px '+FONT;
-    ctx.fillText('Distance/'+fmtDist()+' KM',mx,runY+68*s);
-    ctx.fillText('Move/'+($('move').value||'00:00'),mx,runY+126*s);
-    ctx.fillText('Pace/'+($('pace').value||'0.00'),mx,runY+184*s);
-    spacing('0px');
+    if(mode==='white'){ ctx.fillStyle='#FFFFFF'; ctx.fillRect(0,0,W,H); }
+    else if(mode==='color'){ ctx.fillStyle=$('bgc').value; ctx.fillRect(0,0,W,H); }
+    cv.style.background=mode==='clear'?'transparent':(mode==='color'?$('bgc').value:'#FFFFFF');
+    ink=$('txt').value;
+    var c={W:W,H:H,s:s,safe:safe,mx:Math.round(W*0.095),bot:safe?H*(340/1920):100*s};
+    (TEMPLATES[state.tpl]||poster)(c);
+    ctx.globalAlpha=1; spacing('0px');
     $('size').textContent=W+' × '+H+' px';
   }
 
   var raf=0;
   function schedule(){ if(raf) return; raf=requestAnimationFrame(function(){raf=0;draw()}); }
 
-  ['brand','date','title','pace'].forEach(function(id){ $(id).addEventListener('input',schedule); });
+  ['brand','date','title','sub','pace'].forEach(function(id){ $(id).addEventListener('input',schedule); });
   ['dist','move'].forEach(function(id){ $(id).addEventListener('input',function(){autoPace();schedule()}); });
-  ['bg','txt','shade','shadeAmt','shape','lines','thick','soft','off','ypos','wob'].forEach(function(id){ $(id).addEventListener('input',schedule); $(id).addEventListener('change',schedule); });
+  ['bg','bgc','txt','shade','shadeAmt','shape','lines','thick','soft','off','ypos','wob'].forEach(function(id){ $(id).addEventListener('input',schedule); $(id).addEventListener('change',schedule); });
+  $('bgc').addEventListener('input',function(){ $('bg').value='color'; });
+  $('shuffle').addEventListener('click',function(){
+    state.seed=2+Math.floor(Math.random()*100000);
+    if(parseInt($('wob').value,10)<25) $('wob').value=45;
+    schedule();
+  });
+
+  function setSwatches(){
+    Array.prototype.forEach.call(document.querySelectorAll('.sw'),function(o){
+      o.setAttribute('aria-pressed',o.getAttribute('data-c').toLowerCase()===state.accent.toLowerCase()?'true':'false');
+    });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.sw'),function(b){
+    b.addEventListener('click',function(){ state.accent=b.getAttribute('data-c'); setSwatches(); schedule(); });
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-t]'),function(b){
+    b.addEventListener('click',function(){
+      state.tpl=b.getAttribute('data-t');
+      Array.prototype.forEach.call(document.querySelectorAll('[data-t]'),function(o){o.setAttribute('aria-pressed',o===b?'true':'false')});
+      schedule();
+    });
+  });
+
+  var PRESETS={
+    light:{bg:'white',bgc:'#ffffff',txt:'#0b0b0b',shade:'#0a0a0a',accent:'#B23A3A'},
+    dark:{bg:'color',bgc:'#0e0e12',txt:'#f4f4f2',shade:'#2b2b35',accent:'#FF5A36'},
+    sunset:{bg:'color',bgc:'#f26a3d',txt:'#1a0f08',shade:'#7a1f0a',accent:'#FFD8A8'}
+  };
+  Array.prototype.forEach.call(document.querySelectorAll('[data-p]'),function(b){
+    b.addEventListener('click',function(){
+      var p=PRESETS[b.getAttribute('data-p')];
+      $('bg').value=p.bg; $('bgc').value=p.bgc; $('txt').value=p.txt; $('shade').value=p.shade;
+      state.accent=p.accent; setSwatches();
+      Array.prototype.forEach.call(document.querySelectorAll('[data-p]'),function(o){o.setAttribute('aria-pressed',o===b?'true':'false')});
+      schedule();
+    });
+  });
+
   function clampPx(v,d){ v=parseInt(v,10); if(isNaN(v)) return d; return Math.max(320,Math.min(4000,v)); }
   function guide(){
     var on=$('safe').checked;
@@ -314,18 +550,6 @@ button.b.main{background:var(--btn-bg);color:var(--btn-fg);border-color:var(--bt
   });
   $('safe').addEventListener('change',function(){ guide(); schedule(); });
   guide();
-  $('shuffle').addEventListener('click',function(){
-    state.seed=2+Math.floor(Math.random()*100000);
-    if(parseInt($('wob').value,10)<25) $('wob').value=45;
-    schedule();
-  });
-  Array.prototype.forEach.call(document.querySelectorAll('.sw'),function(b){
-    b.addEventListener('click',function(){
-      state.accent=b.getAttribute('data-c');
-      Array.prototype.forEach.call(document.querySelectorAll('.sw'),function(o){o.setAttribute('aria-pressed',o===b?'true':'false')});
-      schedule();
-    });
-  });
 
   var msg=$('msg');
   function fileName(){ return 'racerun-'+fmtDist().replace(/[^0-9.]/g,'')+'km-'+state.w+'x'+state.h+'.png'; }
@@ -364,7 +588,7 @@ button.b.main{background:var(--btn-bg);color:var(--btn-fg);border-color:var(--bt
 
   draw();
   if(document.fonts&&document.fonts.load){
-    Promise.all([document.fonts.load('900 205px Inter'),document.fonts.load('800 56px Inter'),document.fonts.load('500 31px Inter')])
+    Promise.all([document.fonts.load('900 205px Inter'),document.fonts.load('800 56px Inter'),document.fonts.load('700 28px Inter'),document.fonts.load('500 31px Inter')])
       .then(draw).catch(draw);
     document.fonts.ready.then(draw);
   }
